@@ -156,6 +156,68 @@ describe('main.js', function () {
             }
             )
         })
+        //https://github.com/iann0036/iamfast/issues/5
+        it.skip('should produce a valid iam definition for transact write (ASL)', () => {
+            let policy = generatePolicyAsJson("./tests/asl/test7.json");
+            expect(policy).to.deep.equal({
+                "Version": "2012-10-17",
+                "Statement": [
+                    {
+                        "Effect": "Allow",
+                        "Action": "dynamodb:ConditionCheckItem",
+                        "Resource": [
+                            "arn:aws:dynamodb:us-east-1:123456789012:table/TableName"
+                        ]
+                    },
+                    {
+                        "Effect": "Allow",
+                        "Action": "dynamodb:PutItem",
+                        "Resource": [
+                            "arn:aws:dynamodb:us-east-1:123456789012:table/TableName"
+                        ]
+                    },
+                    {
+                        "Effect": "Allow",
+                        "Action": "dynamodb:UpdateItem",
+                        "Resource": [
+                            "arn:aws:dynamodb:us-east-1:123456789012:table/TableName"
+                        ]
+                    },
+                    {
+                        "Effect": "Allow",
+                        "Action": "dynamodb:DeleteItem",
+                        "Resource": [
+                            "arn:aws:dynamodb:us-east-1:123456789012:table/TableName"
+                        ]
+                    }
+                ]
+            }
+            )
+        })
+        //https://github.com/iann0036/iamfast/issues/8
+        it('should produce a valid iam definition when using default eventbus (ASL)', () => {
+            let policy = generatePolicyAsJson("./tests/asl/test8.json");
+            expect(policy).to.deep.equal({
+                "Version": "2012-10-17",
+                "Statement": [
+                    {
+                        "Effect": "Allow",
+                        "Action": "events:PutRule",
+                        "Resource": [
+                            "arn:aws:events:us-east-1:123456789012:rule/MyRule"
+                        ]
+                    },
+                    {
+                        "Effect": "Allow",
+                        "Action": "events:PutTargets",
+                        "Resource": [
+                            "arn:aws:events:us-east-1:123456789012:rule/MyRule"
+                        ]
+                    }
+                ]
+            }
+            )
+        })
         it('should produce a valid iam definition for DynamoDB (JavaScript)', () => {
             let policy = generatePolicyAsJson("./tests/js/test1.js");
             expect(policy).to.deep.equal({

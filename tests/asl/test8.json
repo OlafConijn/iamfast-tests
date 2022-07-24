@@ -1,0 +1,25 @@
+{
+  "StartAt": "putRuleDefaultBus",
+  "States": {
+    "putRuleDefaultBus": {
+      "Type": "Task",
+      "ResultPath": "$.vars.result",
+      "Resource": "arn:aws:states:::aws-sdk:eventbridge:PutRule",
+      "Parameters": {
+        "Name": "MyRule",
+        "ScheduleExpression": "rate(1 day)"
+      },
+      "Next": "PutTargets"
+    },
+    "PutTargets": {
+      "Type": "Task",
+      "ResultPath": "$.vars.result",
+      "Resource": "arn:aws:states:::aws-sdk:eventbridge:putTargets",
+      "Parameters": {
+        "Rule": "MyRule",
+        "Targets": []
+      },
+      "End": true
+    }
+  }
+}

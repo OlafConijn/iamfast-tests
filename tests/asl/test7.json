@@ -1,0 +1,46 @@
+{
+  "StartAt": "TransactWriteItems",
+  "States": {
+    "TransactWriteItems": {
+      "Type": "Task",
+      "ResultPath": "$.vars.result",
+      "Resource": "arn:aws:states:::aws-sdk:dynamodb:transactWriteItems",
+      "Parameters": {
+        "TransactItems": [
+          {
+            "Put": {
+              "Item": {
+                "pk": {
+                  "S.$": "$.pk"
+                },
+                "sk": {
+                  "S.$": "$.sk"
+                },
+                "field.$": "$.val"
+              },
+              "ConditionExpression": "attribute_not_exists(pk)",
+              "TableName": "tableName"
+            }
+          },
+          {
+            "Update": {
+              "Key": {
+                "pk.$": "$.pk",
+                "sk.$": "$.sk"
+              },
+              "UpdateExpression": "SET field = :val",
+              "ExpressionAttributeValues": {
+                ":val": {
+                  "S.$": "$.val"
+                }
+              },
+              "ConditionExpression": "attribute_exists(field)",
+              "TableName": "tableName"
+            }
+          }
+        ]
+      },
+      "End": true
+    }
+  }
+}
